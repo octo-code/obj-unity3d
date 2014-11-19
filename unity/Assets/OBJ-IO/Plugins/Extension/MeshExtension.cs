@@ -96,6 +96,8 @@ namespace UnityExtension
             List<int>[] lIndices = new List<int>[lData.m_Groups.Count];
             OBJGroup lGroup = null;
 
+            bool hasNormals = lData.m_Normals.Count > 0;
+
             lMesh.subMeshCount = lData.m_Groups.Count;
             for (int lGCount = 0; lGCount < lData.m_Groups.Count; ++lGCount)
             {
@@ -112,7 +114,11 @@ namespace UnityExtension
 
                             lVertices.Add(lData.m_Vertices[lGroup.Faces[lFCount][lVCount].m_VertexIndex]);
                             lUVs.Add(lData.m_UVs[lGroup.Faces[lFCount][lVCount].m_UVIndex]);
-                            lNormals.Add(lData.m_Normals[lGroup.Faces[lFCount][lVCount].m_NormalIndex]);
+
+                            if (hasNormals)
+                            {
+                                lNormals.Add(lData.m_Normals[lGroup.Faces[lFCount][lVCount].m_NormalIndex]);
+                            }
                         }
                     }
                 }
@@ -121,6 +127,11 @@ namespace UnityExtension
             lMesh.uv = lUVs.ToArray();
             lMesh.normals = lNormals.ToArray();
             lMesh.RecalculateTangents();
+
+            if (!hasNormals)
+            {
+                lMesh.RecalculateNormals();
+            }
 
             for (int lGCount = 0; lGCount < lData.m_Groups.Count; ++lGCount)
             {
