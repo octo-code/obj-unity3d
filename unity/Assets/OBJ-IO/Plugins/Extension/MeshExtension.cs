@@ -107,24 +107,29 @@ namespace UnityExtension
                 {
                     OBJFace lFace = lGroup.Faces[lFCount];
 
-                    for (int lVCount = 0; lVCount < lFace.Count; ++lVCount)
+                    // Unity3d doesn't support non-triangle faces
+                    // so we do simple fan triangulation
+                    for (int lVCount = 1; lVCount < lFace.Count - 1; ++lVCount)
                     {
-                        OBJFaceVertex lFaceVertex = lFace[lVCount];
-                        int lVertexIndex = -1;
+                    	foreach (int i in new int[]{0, lVCount, lVCount + 1})
+                    	{
+	                        OBJFaceVertex lFaceVertex = lFace[i];
+	                        int lVertexIndex = -1;
 
-                        if (!lVertexIndexRemap.TryGetValue(lFaceVertex, out lVertexIndex)) {
-                            lVertexIndexRemap[lFaceVertex] = lVertices.Count;
-                            lVertexIndex = lVertices.Count;
+	                        if (!lVertexIndexRemap.TryGetValue(lFaceVertex, out lVertexIndex)) {
+	                            lVertexIndexRemap[lFaceVertex] = lVertices.Count;
+	                            lVertexIndex = lVertices.Count;
 
-                            lVertices.Add(lData.m_Vertices[lFaceVertex.m_VertexIndex]);
-                            lUVs.Add(lData.m_UVs[lFaceVertex.m_UVIndex]);
-                            if (lHasNormals)
-                            {
-                                lNormals.Add(lData.m_Normals[lFaceVertex.m_NormalIndex]);
-                            }
-                        }
+	                            lVertices.Add(lData.m_Vertices[lFaceVertex.m_VertexIndex]);
+	                            lUVs.Add(lData.m_UVs[lFaceVertex.m_UVIndex]);
+	                            if (lHasNormals)
+	                            {
+	                                lNormals.Add(lData.m_Normals[lFaceVertex.m_NormalIndex]);
+	                            }
+	                        }
 
-                        lIndices[lGCount].Add(lVertexIndex);
+	                        lIndices[lGCount].Add(lVertexIndex);
+	                    }
                     }
                 }
             }
