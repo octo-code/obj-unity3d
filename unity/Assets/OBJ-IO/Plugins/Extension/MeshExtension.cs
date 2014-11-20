@@ -123,15 +123,17 @@ namespace UnityExtension
                     }
                 }
             }
+            
             lMesh.vertices = lVertices.ToArray();
             lMesh.uv = lUVs.ToArray();
             lMesh.normals = lNormals.ToArray();
-            lMesh.RecalculateTangents();
 
             if (!hasNormals)
             {
                 lMesh.RecalculateNormals();
             }
+
+            lMesh.RecalculateTangents();
 
             for (int lGCount = 0; lGCount < lData.m_Groups.Count; ++lGCount)
             {
