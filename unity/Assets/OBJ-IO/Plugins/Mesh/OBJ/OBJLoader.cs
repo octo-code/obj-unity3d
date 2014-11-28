@@ -68,6 +68,9 @@ public class OBJLoader
     {
         m_OBJData = new OBJData();
 
+        m_CurrentMaterial = null;
+        m_CurrentGroup = null;
+
         StreamReader lLineStreamReader = new StreamReader(lStream);
 
         Action<string> lAction = null;
